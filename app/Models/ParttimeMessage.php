@@ -55,8 +55,10 @@ class ParttimeMessage extends Model
 
     # 数据动作
     public function onRead(){
-        $this->read = 1;
-        $this->save();
+        if ($this->read == 0) {
+            $this->read = 1;
+            $this->save();
+        }
     }
 
     public function canOperate(ParttimeUser $user){

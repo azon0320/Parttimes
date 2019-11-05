@@ -16,3 +16,18 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('msg', function(){
+    $message = collect([
+        '吃饭了吗？',
+        '今天搞项目还是玩MC？',
+        "感冒好了没有",
+        "招聘会很快就要来了哦!"
+    ])->random();
+
+    \App\Models\ParttimeMessage::createNew(
+        2, $message
+    );
+
+    $this->comment("发送信息成功");
+});

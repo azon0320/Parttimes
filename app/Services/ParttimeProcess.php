@@ -95,6 +95,7 @@ trait ParttimeProcess
     /**
      * @param $parttime_id
      * @param ParttimeUser|null $user
+     * @throws \Exception
      * @return array withNothing
      */
     public static function deleteParttime($parttime_id, ParttimeUser $user = null){
@@ -108,6 +109,7 @@ trait ParttimeProcess
         }else if (!$parttime->canOperate($user)){
             $msg = "permission denied";
         }else {
+            $parttime->delete();
             $succ = true;
         }
         return $succ ? ['succ' => $succ] : ['succ' => $succ, 'msg' => $msg];
@@ -146,10 +148,12 @@ trait ParttimeProcess
         $user = self::currentUser();
         if ($parttime == null) {
             $msg = "not found";
-        }else if(($record = $parttime->records()->where("user_id", $user->getId())) != null) {
+        }else if($parttime->records()->where("user_id", $user->getId())->exists()) {
             $msg = "signed";
-        }else if($parttime->reachLimited()){
-            $msg = "limited";
+        }else if(!$parttime->canSign()){
+            $msg = "failed";
+        }else if($parttime->isOwner($user)){
+            $msg = "owner";
         }else {
             $succ = true;
             $record = ParttimeRecord::createNew(
@@ -175,13 +179,17 @@ trait ParttimeProcess
             $msg = "not found";
         }else if ((
             /** @var ParttimeRecord $record */
-            $record = $parttime->records()->where("user_id", $user->getId())
+            $record = $parttime->records()->where("user_id", $user->getId())->first()
             ) == null){
-            $msg = "unsigned";
+            $msg = "unsign";
         }else if ($record->isCancelled()){
             $msg = "cancelled";
         }else if($record->isChecked()){
             $msg = "checked";
+        }else if($parttime->isOwner($user)){
+            $msg = "owner";
+        }else if (!$parttime->canCheck()){
+            $msg = "failed";
         }else{
             $succ = true;
             $record->setStatus(ParttimeRecord::STATUS_CHECKED);
@@ -204,13 +212,17 @@ trait ParttimeProcess
             $msg = "not found";
         }else if ((
                 /** @var ParttimeRecord $record */
-            $record = $parttime->records()->where("user_id", $user->getId())
+            $record = $parttime->records()->where("user_id", $user->getId())->first()
             ) == null){
-            $msg = "unsigned";
+            $msg = "unsign";
         }else if ($record->isCancelled()){
-            $msg = "cancelled";
+            $msg = "unsigned";
         }else if($record->isChecked()){
             $msg = "checked";
+        }else if($parttime->isOwner($user)){
+            $msg = "owner";
+        }else if(!$parttime->canUnsign()){
+            $msg = "failed";
         }else{
             $succ = true;
             $record->setStatus(ParttimeRecord::STATUS_CANCELLED);

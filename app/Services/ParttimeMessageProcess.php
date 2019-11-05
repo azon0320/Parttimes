@@ -23,9 +23,10 @@ trait ParttimeMessageProcess
         if ($user == null) $user = self::currentUser();
         $views = ParttimeMessage::query()
             ->where("user_id", $user->getId())
+            ->orderBy('read')
             ->get()->map(function(ParttimeMessage $msg){
                 return ParttimeMessageTransformer::fastTransform($msg)
-                    ->filterExcepts([]);
+                    ->filterExcepts([])->toArray();
             });
         return $views;
     }
@@ -46,4 +47,10 @@ trait ParttimeMessageProcess
         }
         return ['succ' => $succ, 'msg' => $msg];
     }
+
+    /* TODO
+    public static function tagRead(ParttimeUser $user = null){
+        if ($user == null) $user = self::currentUser();
+    }
+    */
 }

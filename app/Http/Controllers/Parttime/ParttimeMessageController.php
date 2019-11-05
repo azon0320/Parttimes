@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Parttime;
 
 
 use App\Http\Controllers\Controller;
+use App\Services\JsonProcess;
 use App\Services\ParttimeMessageProcess;
 use App\Services\ParttimeValidatorProcess;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 class ParttimeMessageController extends Controller
 {
 
-    use ParttimeMessageProcess, ParttimeValidatorProcess;
+    use ParttimeMessageProcess, ParttimeValidatorProcess, JsonProcess;
 
     public function __construct()
     {
@@ -22,8 +23,8 @@ class ParttimeMessageController extends Controller
 
     public function view(Request $request){
         return self::viewMessages(
-            min(10, max(1, $request->query('limit', 10))),
-            min(99, max(1, $request->query('page', 1)))
+            max(1, intval($request->query('limit', 10))),
+            max(1, intval($request->query('page', 1)))
         );
     }
 

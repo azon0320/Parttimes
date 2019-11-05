@@ -90,4 +90,8 @@ class ParttimeRecord extends Model
     public function canOperate(ParttimeUser $user){
         return $this->getUserId() == $user->getId();
     }
+
+    public function isOwner(ParttimeUser $user){
+        return $this->getUserId() == $user->getId();
+    }
 }

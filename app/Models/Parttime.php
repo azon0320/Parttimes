@@ -153,12 +153,21 @@ class Parttime extends Model
         return $this->isStarted() && !$this->isEnds();
     }
 
+    /** 能否取消报名? @return bool */
+    public function canUnsign(){
+        return !$this->isStarted() && !$this->isEnds();
+    }
+
     /** 能否作废? @return bool */
     public function canWasted(){
         return !$this->isWasted() && !$this->isOutdated();
     }
 
     public function canOperate(ParttimeUser $user){
+        return $this->getCreatorId() == $user->getId();
+    }
+
+    public function isOwner(ParttimeUser $user){
         return $this->getCreatorId() == $user->getId();
     }
 }

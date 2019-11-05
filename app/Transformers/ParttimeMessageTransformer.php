@@ -13,6 +13,7 @@ class ParttimeMessageTransformer extends BaseTransformer
         /** @var ParttimeMessage $model */
         $this->json['id'] = $model->getId();
         $this->json['data'] = $model->getData();
+        $this->json['read'] = $model->isRead();
 
         $this->json['created_at'] = $model->created_at->toDateTimeString();
 

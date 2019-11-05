@@ -109,7 +109,7 @@ class ParttimeController extends Controller
         return self::validateWithCallback($validator,
             function(\Illuminate\Validation\Validator $v) use($request) {
                 $id = intval($request->input('id'));
-                $returns = self::deleteParttime($id);
+                $returns = self::cancelParttime($id);
                 if ($returns['succ']) {
                     return self::responseWithSuccess200($returns);
                 } else {
@@ -124,7 +124,7 @@ class ParttimeController extends Controller
             Validator::make($request->all('id'), ['id' => ['required', 'integer']]),
             function (\Illuminate\Validation\Validator $v) use($request){
                 $id = intval($request->input('id'));
-                $returns = self::cancelParttime($id);
+                $returns = self::signParttime($id);
                 if ($returns['succ']) {
                     return self::responseWithSuccess200($returns);
                 } else {
