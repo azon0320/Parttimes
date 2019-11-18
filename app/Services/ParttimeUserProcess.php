@@ -4,8 +4,11 @@
 namespace App\Services;
 
 
+use App\Models\Parttime;
 use App\Models\ParttimeUser;
+use App\Transformers\ParttimeTransformer;
 use App\Transformers\ParttimeUserTransformer;
+use App\Transformers\SigndParttimeTransformer;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -38,6 +41,13 @@ trait ParttimeUserProcess
 
     public static function viewSelfUser(){
         return self::viewPersonalUser(self::currentUser()->getUId());
+    }
+
+    public static function viewSignedParttimes(ParttimeUser $user = null){
+        if ($user == null) $user = self::currentUser();
+        return collect($user->parttimes()->get())->map(function(Parttime $parttime){
+            return SigndParttimeTransformer::fastTransform($parttime)->toArray();
+        });
     }
 
     public static function configUser(
@@ -74,7 +84,7 @@ trait ParttimeUserProcess
     }
 
     public static function registerUser(
-        $phone, $passwordUnhashed, $verifyCode
+        $phone, $verifyCode, $passwordUnhashed = null
     )
     {
         $succ = false;
@@ -89,8 +99,9 @@ trait ParttimeUserProcess
             $msg = "registered";
         } else {
             $user = ParttimeUser::createNew(
-                $phone, Hash::make($passwordUnhashed),
-                self::generateUID(), self::generateToken()
+                $phone,
+                self::generateUID(), self::generateToken(),
+                Hash::make($passwordUnhashed)
             );
             $succ = $user != null;
             if ($succ) $msg = $user->getToken();
@@ -122,7 +133,7 @@ trait ParttimeUserProcess
     public static function verifyUserByPassword($phone, $hashed){
         /** @var ParttimeUser $user */
         $user = ParttimeUser::query()->where('phone', $phone)->first();
-        return strval($user->getPasswordHashed()) === strval($hashed) ? $user : null;
+        return $user->getPasswordHashed() != null && strval($user->getPasswordHashed()) === strval($hashed);
     }
 
     public static function verifyPhoneCode($phone, $givenCode){

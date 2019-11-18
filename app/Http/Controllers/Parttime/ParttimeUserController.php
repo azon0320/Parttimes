@@ -43,6 +43,10 @@ class ParttimeUserController extends Controller
         return self::fastResponseBySucc(self::viewSelfUser());
     }
 
+    public function viewSigned(Request $request){
+        return self::viewSignedParttimes();
+    }
+
     public function config(Request $request){
         return self::validateWithCallback(
             Validator::make($request->all(['nickname', 'avatar']),
@@ -52,8 +56,6 @@ class ParttimeUserController extends Controller
                 ]
             ),
             function(\Illuminate\Validation\Validator $v) use($request){
-                //TODO Add Success Process
-                $modifiedsuccess = [];
                 $modified = [];
                 if (($nickname = $request->input('nickname')) != null){
                     $modified['nickname'] = strval($nickname);
@@ -74,7 +76,7 @@ class ParttimeUserController extends Controller
             Validator::make($request->all(['phone', 'password', 'verified_code']),
                 [
                     'phone' => ['required', 'string', 'size:11'],
-                    'password' => ['required', 'string', 'between:6,20'],
+                    'password' => ['nullable', 'string', 'between:6,20'],
                     'verified_code' => ['required', 'string', 'size:4']
                 ]
             ),
@@ -82,8 +84,8 @@ class ParttimeUserController extends Controller
                 $phone = $request->input('phone');
                 if (is_numeric($phone)) {
                     $inputCode = $request->input('verified_code');
-                    $password = $request->input('password');
-                    return self::fastResponseBySucc(self::registerUser($phone, $password, $inputCode));
+                    $password = $request->input('password', null);
+                    return self::fastResponseBySucc(self::registerUser($phone, $inputCode, $password));
                 }else return self::responseWithErrorMessage('phone error');
             }
         );

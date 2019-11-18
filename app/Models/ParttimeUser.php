@@ -22,9 +22,9 @@ class ParttimeUser extends Model
      */
     public static function createNew(
         $phone,
-        $hashedPassword,
         $uid,
         $token,
+        $hashedPassword = null,
         $credit = self::DEFAULT_CREDIT,
         $nickName = ''
     ){

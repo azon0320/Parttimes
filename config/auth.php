@@ -79,7 +79,6 @@ return [
 
         'parttime_users' => [
             'driver' => 'eloquent',
-            # TODO ParttimeUser Model Build
             'model' => App\Models\ParttimeUser::class
         ],
 

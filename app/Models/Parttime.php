@@ -12,6 +12,15 @@ class Parttime extends Model
 
     const LIMITED_NOLIMIT = 0;
 
+
+    const STATUS_ENDED = 1;
+    const STATUS_CANCELLED = 2;
+
+    const STATUS_SIGNING = 3;
+    const STATUS_STARTING = 4;
+
+
+
     /**
      * 创建一个 Parttime
      * 不作任何合法性检查
@@ -137,6 +146,17 @@ class Parttime extends Model
 
 
     # 常用逻辑
+    public function getStatus(){
+        if ($this->isOutdated()){
+            return self::STATUS_ENDED;
+        }else if ($this->getCancelledBool()){
+            return self::STATUS_CANCELLED;
+        }else if ($this->isStarted()){
+            return self::STATUS_STARTING;
+        }else {
+            return self::STATUS_SIGNING;
+        }
+    }
 
     /** 是否结束? @return bool */
     public function isEnds(){

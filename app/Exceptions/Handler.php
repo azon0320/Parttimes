@@ -72,6 +72,6 @@ class Handler extends ExceptionHandler
         }else if($exception instanceof ThrottleRequestsException){
             return new APIException(1,$exception->getMessage(), [], $exception->getStatusCode(), $exception);
         }
-        return null;
+        return new APIException(1, 'internal', [], 500, $exception);
     }
 }
