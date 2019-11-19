@@ -43,8 +43,8 @@ class ParttimeUserController extends Controller
         return self::fastResponseBySucc(self::viewSelfUser());
     }
 
-    public function viewSigned(Request $request){
-        return self::viewSignedParttimes();
+    public function viewCreateds(Request $request){
+        return self::viewCreatedParttimes();
     }
 
     public function config(Request $request){

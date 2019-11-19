@@ -43,7 +43,7 @@ trait ParttimeUserProcess
         return self::viewPersonalUser(self::currentUser()->getUId());
     }
 
-    public static function viewSignedParttimes(ParttimeUser $user = null){
+    public static function viewCreatedParttimes(ParttimeUser $user = null){
         if ($user == null) $user = self::currentUser();
         return collect($user->parttimes()->get())->map(function(Parttime $parttime){
             return SigndParttimeTransformer::fastTransform($parttime)->toArray();

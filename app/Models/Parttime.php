@@ -16,8 +16,9 @@ class Parttime extends Model
     const STATUS_ENDED = 1;
     const STATUS_CANCELLED = 2;
 
-    const STATUS_SIGNING = 3;
-    const STATUS_STARTING = 4;
+    const STATUS_STARTING = 3;
+    const STATUS_SIGNING = 4;
+
 
 
 
@@ -45,12 +46,14 @@ class Parttime extends Model
         $creator_id,
         $detail = "",
         array $img = [],
-        $limited = self::LIMITED_NOLIMIT
+        $limited = self::LIMITED_NOLIMIT,
+        $location_str = ''
     ){
         $parttime = new Parttime();
         $parttime->title = $title;
         $parttime->setStartEndTime($from, $to);
         $parttime->location = $location;
+        $parttime->location_str = $location_str;
         $parttime->deadline = $deadline;
         $parttime->detail = $detail;
         $parttime->setImgs($img);
@@ -102,6 +105,10 @@ class Parttime extends Model
     /** @return string */
     public function getLocation(){
         return $this->location;
+    }
+    /** @return string */
+    public function getLocationString(){
+        return $this->location_str;
     }
     /** @return string */
     public function getDeadline(){return $this->deadline;}

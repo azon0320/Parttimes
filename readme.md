@@ -23,7 +23,7 @@ Parttimes是用Laravel5.8框架开发的活动记录与分享平台，数据返�
 
 
 ### 异常抛出方式
-##### 当 config(app.debug) 为 false 时，作为线上环境会直接抛出一个 500，否则显示错误轨迹(traces)
+当 config(app.debug) 为 false 时，作为线上环境会直接抛出一个 500，否则显示错误轨迹(traces)
 
 ### 未来修复
 * 限制提交的密码Hash长度 @ParttimeUserController::login()

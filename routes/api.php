@@ -27,7 +27,7 @@ Route::prefix('/parttime')
     ->namespace('\App\Http\Controllers\Parttime')
     ->group(function(Router $router) {
         $CONTROLLER = "ParttimeController";
-        $router->get('/view', "$CONTROLLER@view")->name("parttime.view");
+        $router->any('/view', "$CONTROLLER@view")->name("parttime.view");
         $router->post('/create', "$CONTROLLER@create")->name("parttime.create");
         $router->post('/delete', "$CONTROLLER@delete")->name("parttime.delete");
         $router->post('/cancel', "$CONTROLLER@cancel")->name("parttime.cancel");
@@ -42,10 +42,17 @@ Route::prefix('/user')
         $CONTROLLER = "ParttimeUserController";
         $router->get('/view', "$CONTROLLER@view")->name('user.view');
         $router->post('/self', "$CONTROLLER@viewself")->name('user.viewself');
-        $router->post('/signed', "$CONTROLLER@viewSigned")->name('user.viewsigned');
+        $router->post('/created', "$CONTROLLER@viewCreateds")->name('user.viewcreateds');
         $router->post('/config', "$CONTROLLER@config")->name('user.config');
         $router->post('/register', "$CONTROLLER@register")->name('user.register');
         $router->post('/login', "$CONTROLLER@login")->name('user.login');
+    });
+
+Route::prefix('/record')
+    ->namespace('\App\Http\Controllers\Parttime')
+    ->group(function(Router $router) {
+        $CONTROLLER = "ParttimeRecordController";
+        $router->post('/view', "$CONTROLLER@view")->name('record.view');
     });
 
 Route::prefix('/message')

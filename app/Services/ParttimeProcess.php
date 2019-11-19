@@ -21,19 +21,21 @@ trait ParttimeProcess
      * @param int $page
      * @return array
      */
-    public static function viewParttimes($limit = 10, $page = 1){
+    public static function viewParttimes($limit = 8, $page = 1){
         $now = Carbon::now();
         $views = Parttime::query()
             # 条件
             # 未取消 未超过开始时间 未超过报名截止 人数未到上限或者限制是0
             ->where("cancelled", 0)
-            ->where("timestart", ">", $now)
+            # ->where("timestart", ">", $now)
             ->where("deadline", ">", $now)
             ->orderByDesc("created_at")
             ->get()->filter(function(Parttime $parttime){
                 return !$parttime->reachLimited();
             })->forPage($page, $limit)->map(function (Parttime $parttime){
-                return ParttimeTransformer::fastTransform($parttime)->toArray();
+                return ParttimeTransformer::fastTransform($parttime, self::currentUser())->toArray();
+            })->sortByDesc(function($value, $key){
+                return $value['status'];
             })->all();
         return $views;
     }
@@ -83,6 +85,10 @@ trait ParttimeProcess
         }else if (count($locs = explode(",", $location)) != 2){
             $msg = "location error";
         }else {
+
+            # TODO 地理位置转化为位置信息
+            $location_str = "";
+
             if ($user == null) $user = self::currentUser();
             $parttime = Parttime::createNew($title, $from, $to, $location, $deadline, $user->getId(), $detail, $imgPath, $limited);
             $succ = $parttime != null;

@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ParttimeRecord extends Model
 {
-    const STATUS_UNKNOWN = 0;
-    const STATUS_SIGNED = 2;
-    const STATUS_CANCELLED = 3;
-    const STATUS_CHECKED = 4;
+    const STATUS_UNSIGN = 0;
+
+    const STATUS_CANCELLED = 1;
+    const STATUS_CHECKED = 2;
+    const STATUS_SIGNED = 3;
+
 
     /**
      * @param integer $user_id 用户ID
