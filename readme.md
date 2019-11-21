@@ -1,7 +1,5 @@
 
 ## Parttimes 活动记录
-<p align="center"><a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
 
 #### Laravel 学后练习
 
@@ -15,7 +13,7 @@ Parttimes是用Laravel5.8框架开发的活动记录与分享平台，数据返�
 4. 到项目根目录处，执行 php artisan migrate
 4. 要求不打印错误输出时，将 .env文件 的 APP_DEBUG 改为 FALSE
 
-###基于HTTP状态码的数据返回
+### 基于HTTP状态码的数据返回
 
 - 200 OK 一般返回，可能会返回额外的信息
 - 400 Authentication Failed 认证错误，未携带令牌操作数据时会返回400
