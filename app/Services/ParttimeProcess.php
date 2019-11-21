@@ -28,7 +28,7 @@ trait ParttimeProcess
             # 未取消 未超过开始时间 未超过报名截止 人数未到上限或者限制是0
             ->where("cancelled", 0)
             # ->where("timestart", ">", $now)
-            ->where("deadline", ">", $now)
+            #->where("deadline", ">", $now)
             ->orderByDesc("created_at")
             ->get()->filter(function(Parttime $parttime){
                 return !$parttime->reachLimited();
@@ -36,7 +36,7 @@ trait ParttimeProcess
                 return ParttimeTransformer::fastTransform($parttime, self::currentUser())->toArray();
             })->sortByDesc(function($value, $key){
                 return $value['status'];
-            })->all();
+            })->values()->all();
         return $views;
     }
 
@@ -60,6 +60,7 @@ trait ParttimeProcess
         $detail,
         array $imgPath = [],
         $limited = 0,
+        $location_str = '',
         ParttimeUser $user = null
     ){
         $succ = false;
@@ -87,10 +88,9 @@ trait ParttimeProcess
         }else {
 
             # TODO 地理位置转化为位置信息
-            $location_str = "";
 
             if ($user == null) $user = self::currentUser();
-            $parttime = Parttime::createNew($title, $from, $to, $location, $deadline, $user->getId(), $detail, $imgPath, $limited);
+            $parttime = Parttime::createNew($title, $from, $to, $location, $deadline, $user->getId(), $detail, $imgPath, $limited, $location_str);
             $succ = $parttime != null;
         }
         return $succ ?

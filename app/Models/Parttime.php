@@ -17,7 +17,10 @@ class Parttime extends Model
     const STATUS_CANCELLED = 2;
 
     const STATUS_STARTING = 3;
-    const STATUS_SIGNING = 4;
+
+    const STATUS_OUTSIGN = 4;
+
+    const STATUS_SIGNING = 5;
 
 
 
@@ -160,7 +163,9 @@ class Parttime extends Model
             return self::STATUS_CANCELLED;
         }else if ($this->isStarted()){
             return self::STATUS_STARTING;
-        }else {
+        }else if($this->isOutSigned()){
+            return self::STATUS_OUTSIGN;
+        }else{
             return self::STATUS_SIGNING;
         }
     }

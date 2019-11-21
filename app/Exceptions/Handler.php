@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +49,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
+        # 快捷查看错误信息
+        # return parent::render($request, $exception);
+
         $back = $this->onAPIHandle($request, $exception);
         if ($back != null) {
             return response()->json(
@@ -71,6 +76,8 @@ class Handler extends ExceptionHandler
             return new APIException(1, $exception->getMessage(), [], 400, $exception);
         }else if($exception instanceof ThrottleRequestsException){
             return new APIException(1,$exception->getMessage(), [], $exception->getStatusCode(), $exception);
+        }else if($exception instanceof NotFoundHttpException){
+            return new APIException(1, 'not found', [], 404);
         }
         return new APIException(1, 'internal', [], 500, $exception);
     }

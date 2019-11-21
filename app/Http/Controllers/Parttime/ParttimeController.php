@@ -42,6 +42,7 @@ class ParttimeController extends Controller
         #  (from) date required
         #  (to) date required
         #  (location) string required
+        #  (location_str) string required
         #  (signuntil) date required
         # more 默认 空
         # max 默认 0
@@ -52,6 +53,7 @@ class ParttimeController extends Controller
             'from' => 'required|date',
             'to' => 'required|date',
             'location' => 'required|string',
+            'location_str' => 'nullable|string',
             'signuntil' => 'required|date',
             # 文件大小单位是kb
             'img_0' => 'required|image|max:256',
@@ -78,7 +80,9 @@ class ParttimeController extends Controller
                 Carbon::parse($all['signuntil']),
                 $request->input('detail', ''),
                 array_keys($imgFiles),
-                intval($request->input('max', 0))
+                intval($request->input('max', 0)),
+                # TODO 不能用户指定，要由地图API返回具体的地名
+                $request->input('location_str', '顺德大良五沙碧桂路口')
             );
             if ($returns['succ']) {
                 self::saveParttimeImages($returns['id'], $imgFiles);

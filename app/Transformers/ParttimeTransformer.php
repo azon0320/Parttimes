@@ -47,7 +47,10 @@ class ParttimeTransformer extends BaseTransformer
         $this->json["currentsigners"] = $model->getCurrentSigner()->count();
         $this->json["limited"] = $model->getLimited();
 
-        $this->json["creator_uid"] = $model->creator()->getUID();
+        /** @var ParttimeUser $creator */
+        $creator = $model->creator()->first();
+        $this->json["creator_uid"] = $creator->getUId();
+        $this->json["creator"] = $creator->getNickname();
 
         $this->json["created_at"] = $model->created_at->toDateTimeString();
 

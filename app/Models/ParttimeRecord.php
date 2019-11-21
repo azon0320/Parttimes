@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ParttimeRecord extends Model
 {
-    const STATUS_UNSIGN = 0;
 
+    const STATUS_UNSIGN = 0;
     const STATUS_CANCELLED = 1;
     const STATUS_CHECKED = 2;
     const STATUS_SIGNED = 3;
