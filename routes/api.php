@@ -42,6 +42,7 @@ Route::prefix('/user')
         $router->get('/view', "$CONTROLLER@view")->name('user.view');
         $router->post('/self', "$CONTROLLER@viewself")->name('user.viewself');
         $router->post('/created', "$CONTROLLER@viewCreateds")->name('user.viewcreateds');
+        $router->post('/signed', "$CONTROLLER@viewSigneds")->name('user.viewsigneds');
         $router->post('/config', "$CONTROLLER@config")->name('user.config');
         $router->post('/register', "$CONTROLLER@register")->name('user.register');
         $router->post('/login', "$CONTROLLER@login")->name('user.login');

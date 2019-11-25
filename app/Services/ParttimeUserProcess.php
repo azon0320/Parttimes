@@ -5,10 +5,12 @@ namespace App\Services;
 
 
 use App\Models\Parttime;
+use App\Models\ParttimeRecord;
 use App\Models\ParttimeUser;
 use App\Transformers\ParttimeTransformer;
 use App\Transformers\ParttimeUserTransformer;
-use App\Transformers\SigndParttimeTransformer;
+use App\Transformers\CreatedParttimeTransformer;
+use App\Transformers\SignedParttimeTransformer;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -17,7 +19,9 @@ trait ParttimeUserProcess
 {
     use ParttimeAuthProcess, ParttimeDiskProcess;
 
-    public static function viewUser($uid, $filter = true){
+    public static function viewUser($uid, $filter = [
+        "id", "phone", "credit", "password", "token"
+    ]){
         $query = ParttimeUser::query()->where("uid", $uid);
         $succ = false;$msg = "";$data = [];
         if (!$query->exists()){
@@ -27,16 +31,14 @@ trait ParttimeUserProcess
             $target = $query->first();
             $succ = true;
             $data = ParttimeUserTransformer::fastTransform($target);
-            if ($filter) $data->filterExcepts([
-                    "id", "phone", "credit", "password", "token"
-            ]);
+            $data->filterExcepts($filter);
         }
         return $succ ? ['succ' => $succ, 'data' => $data->toArray()]
             : ['succ' => $succ, 'msg' => $msg];
     }
 
     public static function viewPersonalUser($uid){
-        return self::viewUser($uid, false);
+        return self::viewUser($uid, ['id', 'password']);
     }
 
     public static function viewSelfUser(){
@@ -46,8 +48,21 @@ trait ParttimeUserProcess
     public static function viewCreatedParttimes(ParttimeUser $user = null){
         if ($user == null) $user = self::currentUser();
         return collect($user->parttimes()->get())->map(function(Parttime $parttime){
-            return SigndParttimeTransformer::fastTransform($parttime)->toArray();
-        });
+            return CreatedParttimeTransformer::fastTransform($parttime)->toArray();
+        })->sortByDesc(function($json){
+            return $json['status'];
+        })->values()->all();
+    }
+
+    public static function viewSignedParttimes(ParttimeUser $user = null){
+        if ($user == null) $user = self::currentUser();
+        return collect($user->records()->get())->map(function(ParttimeRecord $record){
+            /** @var Parttime $parttime */
+            $parttime = $record->parttime()->first();
+            return SignedParttimeTransformer::fastTransformWithRecord($parttime, $record)->toArray();
+        })->sortByDesc(function($json){
+            return $json['record_status'];
+        })->values()->all();
     }
 
     public static function configUser(

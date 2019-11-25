@@ -31,4 +31,9 @@ class ParttimeUserTransformer extends BaseTransformer
 
         return $this;
     }
+
+    public function filterExcepts(array $excepts = [])
+    {
+        return parent::filterExcepts($excepts);
+    }
 }

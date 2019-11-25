@@ -29,6 +29,8 @@ trait ParttimeProcess
             ->where("cancelled", 0)
             # ->where("timestart", ">", $now)
             #->where("deadline", ">", $now)
+            ->orderByDesc("timestart")
+            ->orderByDesc("deadline")
             ->orderByDesc("created_at")
             ->get()->filter(function(Parttime $parttime){
                 return !$parttime->reachLimited();

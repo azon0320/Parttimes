@@ -9,10 +9,8 @@ use App\Services\JsonProcess;
 use App\Services\ParttimeUserProcess;
 use App\Services\ParttimeValidatorProcess;
 use App\Services\PhoneCodeProcess;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class ParttimeUserController extends Controller
 {
@@ -45,6 +43,10 @@ class ParttimeUserController extends Controller
 
     public function viewCreateds(Request $request){
         return self::viewCreatedParttimes();
+    }
+
+    public function viewSigneds(Request $request){
+        return self::viewSignedParttimes();
     }
 
     public function config(Request $request){
