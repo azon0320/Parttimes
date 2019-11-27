@@ -7,7 +7,6 @@ namespace App\Transformers;
 use App\Models\Parttime;
 use App\Models\ParttimeRecord;
 use App\Models\ParttimeUser;
-use Carbon\Carbon;
 
 class ParttimeUserTransformer extends BaseTransformer
 {
@@ -22,10 +21,17 @@ class ParttimeUserTransformer extends BaseTransformer
         $this->json["nickname"] = $model->getNickname();
         $this->json["token"] = $model->getToken();
 
-        $this->json["parttimes"] = $model->parttimes()->get()->map(function(Parttime $parttime) use($model){
+        $this->json["signeds"] = $model->records()->get()->map(function(ParttimeRecord $record) use($model){
+            return [
+                'id' => $record->getParttimeId(),
+                'status' => $record->getStatus()
+            ];
+        });
+
+        $this->json["createds"] = $model->parttimes()->get()->map(function(Parttime $parttime){
             return [
                 'id' => $parttime->getId(),
-                'status' => $parttime->records()->where('user_id', $model->getId())->first()->getStatus()
+                'status' => $parttime->getStatus()
             ];
         });
 

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Parttime;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Parttime;
 use App\Services\JsonProcess;
 use App\Services\ParttimeDiskProcess;
 use App\Services\ParttimeProcess;
 use App\Services\ParttimeValidatorProcess;
+use App\Transformers\ParttimeTransformer;
 use Carbon\Carbon;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
@@ -20,7 +22,7 @@ class ParttimeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api')->except('view');
+        $this->middleware('auth:api')->except(['view', 'info']);
     }
 
     public function view(Request $request){
@@ -29,6 +31,13 @@ class ParttimeController extends Controller
         $page = $request->query('page', 1);
         $page = max($page, 1);
         return self::responseWithSuccess200(self::viewParttimes($limit, $page));
+    }
+
+    public function info($pid){
+        $parttimes = Parttime::query()->find($pid);
+        return $parttimes == null ?
+            self::responseWithErrorMessage('not found', 404) :
+            self::responseWithSuccess200(ParttimeTransformer::fastTransform($parttimes)->toArray());
     }
 
     public function create(Request $request){

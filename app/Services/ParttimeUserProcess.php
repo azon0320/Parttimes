@@ -19,8 +19,9 @@ trait ParttimeUserProcess
 {
     use ParttimeAuthProcess, ParttimeDiskProcess;
 
+    # 游客视角，指定用户的公开信息
     public static function viewUser($uid, $filter = [
-        "id", "phone", "credit", "password", "token"
+        "id", "phone", "credit", "password", "token", "signeds"
     ]){
         $query = ParttimeUser::query()->where("uid", $uid);
         $succ = false;$msg = "";$data = [];
@@ -37,10 +38,13 @@ trait ParttimeUserProcess
             : ['succ' => $succ, 'msg' => $msg];
     }
 
+
+    # 指定用户的私人信息
     public static function viewPersonalUser($uid){
         return self::viewUser($uid, ['id', 'password']);
     }
 
+    # 已登录用户自己的私人信息
     public static function viewSelfUser(){
         return self::viewPersonalUser(self::currentUser()->getUId());
     }
@@ -121,7 +125,7 @@ trait ParttimeUserProcess
             $succ = $user != null;
             if ($succ) $msg = $user->getToken();
         }
-        return ['succ' => $succ, 'msg' => $msg];
+        return ['succ' => $succ, 'msg' => $msg, 'token' => $succ ? $msg : ""];
     }
 
     public static function loginUser($phone, array $securities){
@@ -148,7 +152,7 @@ trait ParttimeUserProcess
     public static function verifyUserByPassword($phone, $hashed){
         /** @var ParttimeUser $user */
         $user = ParttimeUser::query()->where('phone', $phone)->first();
-        return $user->getPasswordHashed() != null && strval($user->getPasswordHashed()) === strval($hashed);
+        return $user->getPasswordHashed() != null && strval($user->getPasswordHashed()) === strval($hashed) ? $user : null;
     }
 
     public static function verifyPhoneCode($phone, $givenCode){

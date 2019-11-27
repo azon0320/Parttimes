@@ -58,7 +58,10 @@ class Handler extends ExceptionHandler
             return response()->json(
                 $back->toJson(), $back->getResponseCode()
             );
-        }else return parent::render($request, $exception);
+        }else {
+            #var_dump(get_class($exception));
+            return parent::render($request, $exception);
+        }
     }
 
     public function onAPIHandle($request, Exception $exception){

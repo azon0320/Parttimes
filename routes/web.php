@@ -26,9 +26,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/avatar/{userid}', function($uid){
     $disk = \Illuminate\Support\Facades\Storage::disk('parttime_avatars');
     $fname = "$uid.jpg";
-    return $disk->exists($fname) ?
-        \Intervention\Image\Facades\Image::make($disk->readStream($fname))->response() :
-        response("not found", 404);
+    if ($disk->exists($fname)){
+        return \Intervention\Image\Facades\Image::make($disk->readStream($fname))->response();
+    }else{
+        $disk = \Illuminate\Support\Facades\Storage::disk('parttime_defaults');
+        $path = 'avatar.png';
+        return \Intervention\Image\Facades\Image::make($disk->readStream($path))->response();
+    }
 });
 
 Route::get('/imgs/{parttime_id}/{index}', function($parttime_id, $index){

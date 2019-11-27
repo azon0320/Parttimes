@@ -27,6 +27,7 @@ Route::prefix('/parttime')
     ->group(function(Router $router) {
         $CONTROLLER = "ParttimeController";
         $router->any('/view', "$CONTROLLER@view")->name("parttime.view");
+        $router->any('/info/{pid}', "$CONTROLLER@info")->name('parttime.info');
         $router->post('/create', "$CONTROLLER@create")->name("parttime.create");
         $router->post('/delete', "$CONTROLLER@delete")->name("parttime.delete");
         $router->post('/cancel', "$CONTROLLER@cancel")->name("parttime.cancel");
