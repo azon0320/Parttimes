@@ -31,6 +31,7 @@ Parttimes是用Laravel5.8框架开发的活动记录与分享平台，数据返�
 ### 用到的其他库
 
 - intervention/image 图形处理，负责将上传的图片转为jpg格式
+- barryvdh/laravel-cors 跨域处理，解决前后端分离的跨域问题
 
 ### 许可证
 

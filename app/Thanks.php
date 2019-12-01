@@ -27,4 +27,10 @@ interface Thanks
      * @see ParttimeDiskProcess
      */
     const LIB_IMAGE = "intervention/image";
+
+    /**
+     * CORS 跨域处理
+     * 自动注册 ServiceProvider: /vendor/barryvdh/laravel-cors/src/ServiceProvider
+     */
+    const LIB_CORS = "barryvdh/laravel-cors";
 }
